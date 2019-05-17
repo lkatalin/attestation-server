@@ -47,6 +47,8 @@ fn main() {
                 let report = create_report(qe_id);
 
                 println!("Enclave report for QE is: {:?}", report);
+
+                stream.write(&report.as_ref()).unwrap();
             },
             Err(_) => {
                println!("error occurred\n");
