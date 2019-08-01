@@ -1,6 +1,7 @@
 use sgx_isa::{Report, Targetinfo};
 use std::io::{self, Read, Write};
 use std::net::{TcpListener, TcpStream};
+use ring::{agreement, rand};
 
 
 // read QE ID from stream
@@ -32,6 +33,20 @@ fn create_report(t: Targetinfo) -> Report {
     Report::for_target(&t, &[0; 64])
 }
 
+fn create_report_with_data(t: Targetinfo, rd: [u8; 64]) -> Report {
+    Report::for_target(&t, &rd)
+}
+
+fn create_session_key()  {// {-> ring::agreement::PublicKey {
+    let rng = rand::SystemRandom::new();
+    let my_private_key = agreement::EphemeralPrivateKey::generate(&agreement::X25519, &rng);
+    
+    //let priv_key = agreement::EphemeralPrivateKey::generate(&agreement::ECDH_P256, &rng).expect("Could not generate private ECDH key.");
+    //let pub_key = priv_key.compute_public_key().expect("Could not generate public ECDH key.");
+
+    //pub_key
+}
+
 fn main() {
     println!("\nListening on port 1032....\n");
 
@@ -42,11 +57,17 @@ fn main() {
 
                 let qe_id = handle_qe_id(&mut stream).unwrap();
 
-                println!("QE ID received by enclave is: {:?}", qe_id);
+                //println!("QE ID received by enclave is: {:?}", qe_id);
 
-                let report = create_report(qe_id);
+                //let ecdh_pub_key = create_session_key();
+                create_session_key();
 
-                println!("Enclave report for QE is: {:?}", report);
+                let mut reportdata = [0; 64];
+                //reportdata.copy_from_slice(ecdh_pub_key.as_ref());
+
+                let report = create_report_with_data(qe_id, reportdata);
+
+                println!("Report Data is: {:?}", report.reportdata.to_vec());
 
                 stream.write(&report.as_ref()).unwrap();
             },
