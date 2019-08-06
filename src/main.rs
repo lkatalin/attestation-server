@@ -1,8 +1,7 @@
 use sgx_isa::{Report, Targetinfo};
 use std::io::{self, Read, Write};
 use std::net::{TcpListener, TcpStream};
-use ring::{agreement, rand};
-
+extern crate mbedtls;
 
 // read QE ID from stream
 fn handle_qe_id(stream: &mut TcpStream) -> io::Result<Targetinfo> {
@@ -38,13 +37,7 @@ fn create_report_with_data(t: Targetinfo, rd: [u8; 64]) -> Report {
 }
 
 fn create_session_key()  {// {-> ring::agreement::PublicKey {
-    let rng = rand::SystemRandom::new();
-    let my_private_key = agreement::EphemeralPrivateKey::generate(&agreement::X25519, &rng);
     
-    //let priv_key = agreement::EphemeralPrivateKey::generate(&agreement::ECDH_P256, &rng).expect("Could not generate private ECDH key.");
-    //let pub_key = priv_key.compute_public_key().expect("Could not generate public ECDH key.");
-
-    //pub_key
 }
 
 fn main() {
@@ -60,7 +53,7 @@ fn main() {
                 //println!("QE ID received by enclave is: {:?}", qe_id);
 
                 //let ecdh_pub_key = create_session_key();
-                create_session_key();
+                //create_session_key();
 
                 let mut reportdata = [0; 64];
                 //reportdata.copy_from_slice(ecdh_pub_key.as_ref());

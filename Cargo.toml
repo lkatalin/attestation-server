@@ -6,7 +6,10 @@ edition = "2018"
 
 [dependencies]
 sgx-isa = { version = "0.2", features = ["sgxstd"] }
-ring = "0.16.5"
+openssl = { version = "0.10.24", features = ["vendored"]}
+#mbedtls = "0.3.0"
+#mbedtls = {version="0.3.0", default-features = false, features = ["sgx"]}
+#mbedtls = { version = "0.3.0", path = "../../rust-mbedtls/mbedtls"}
 
-[patch.crates-io]
-ring = { git = 'https://github.com/npmccallum/ring.git' }
+#[patch.crates-io]
+#mbedtls = { git = "https://github.com/ekse/rust-mbedtls", branch = "bindgen-upgrade-v2" }
